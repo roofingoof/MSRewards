@@ -5,13 +5,10 @@ import threading
 
 
 
-
-
-
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.firefox.options import Options 
-
+from selenium.common.exceptions import NoSuchElementException
 import time
 import random
 
@@ -66,6 +63,13 @@ mob_profile = webdriver.FirefoxProfile()
 mob_profile.set_preference("general.useragent.override", MOBILE_USER_AGENT)
 mob_driver =  webdriver.Firefox(executable_path=EXEC_PATH, firefox_profile=mob_profile, options=options)
 linkFix = ''
+
+def checkIfElementExists(id, whichdriver):
+    try:
+        whichdriver.find_element_by_id(id)
+    except NoSuchElementException:
+        return False
+    return True
 def slowType(e, word, delay):
     for c in word:
         e.send_keys(c)
@@ -78,9 +82,8 @@ def login(num, MSAccount, whichDriver, mob):
         if mob == True:
             mob_driver.get(BING)
             time.sleep(WEB_DELAY)
-
-            #if num == 0 and retry ==0:
-            #    whichDriver.find_element_by_id("bnp_btn_accept").click()
+            if checkIfElementExists("bnp_btn_accept", whichDriver) == True:
+                whichDriver.find_element_by_id("bnp_btn_accept").click()
             mob_driver.find_element_by_xpath('//*[@id="mHamburger"]').click()
             time.sleep(5)
             a= mob_driver.find_element_by_css_selector("#HBSignIn > a:nth-child(1)")
@@ -88,8 +91,8 @@ def login(num, MSAccount, whichDriver, mob):
         else:
             driver.get(BING)
             time.sleep(WEB_DELAY)
-            #if num ==0 and retry ==0:
-            #    whichDriver.find_element_by_id("bnp_btn_accept").click()
+            if checkIfElementExists("bnp_btn_accept", whichDriver) == True:
+                whichDriver.find_element_by_id("bnp_btn_accept").click()
             signin= driver.find_element_by_xpath('//*[@id="id_l"]')
             signin.click()
             time.sleep(WEB_DELAY)    
@@ -130,6 +133,7 @@ def logout(whichDriver):
         return
     except:
         print("Trying again! LOGOUT!")
+        whichDriver.get_screenshot_as_file(f'screenshot_logout.png')
         logout(whichDriver)
 
 
@@ -150,6 +154,7 @@ def search(whichDriver):
         return
     except:
         print("Trying Again!")
+        whichDriver.get_screenshot_as_file(f'screenshot_search.png')
         search(whichDriver)
 
 
@@ -167,6 +172,7 @@ def search(whichDriver):
 
 def main():
     for num, msAccount in enumerate(MSAccounts):
+        print(msAccount.getEmail())
         login(num, msAccount, driver, False)
         time.sleep(WEB_DELAY)
         #accept button thing manage cookies
@@ -178,6 +184,7 @@ def main():
 
 def MOB_main():
     for num, msAccount in enumerate(MSAccounts):
+        print(msAccount.getEmail())
         login(num, msAccount,mob_driver, True)
         time.sleep(WEB_DELAY)
         #accept button thing manage cookies
