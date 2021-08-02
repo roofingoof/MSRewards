@@ -76,6 +76,13 @@ def slowType(e, word, delay):
         time.sleep(delay)
     return
 
+def staysignedin(whichdriver):
+    time.sleep(WEB_DELAY)
+    whichdriver.find_element_by_id("idBtn_Back").click()
+    return True
+
+
+
 def login(num, MSAccount, whichDriver, mob):
     try:
         retry =0
@@ -108,6 +115,9 @@ def login(num, MSAccount, whichDriver, mob):
         time.sleep(2)
         passwordSignIn = whichDriver.find_element_by_xpath('//*[@id="idSIButton9"]')
         passwordSignIn.click()
+        if mob == False and checkIfElementExists("idBtn_Back", whichDriver) == True:
+            staysignedin(whichDriver)
+            time.sleep(WEB_DELAY)
         time.sleep(WEB_DELAY)
         return True
     except:
