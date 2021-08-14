@@ -53,7 +53,7 @@ profile = webdriver.FirefoxProfile()
 profile.set_preference("general.useragent.override", USER_AGENT)
 
 options = Options()
-options.headless = False
+options.headless = True
 
 
 
