@@ -78,7 +78,7 @@ def slowType(e, word, delay):
 
 def staysignedin(whichdriver):
     time.sleep(WEB_DELAY)
-    whichdriver.find_element_by_id("idBtn_Back").click()
+    whichdriver.find_element_by_id("idSIButton9").click()
     return True
 
 
