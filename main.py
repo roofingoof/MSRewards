@@ -13,9 +13,9 @@ import time
 import random
 
 
-
+LOGOUT = "https://rewards.microsoft.com/Signout"
 WEB_DELAY= 8
-DASHBOARD = "https://account.microsoft.com/rewards/"
+DASHBOARD = "https://rewards.microsoft.com"
 BING = "https://www.bing.com"
 USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36 Edg/91.0.864.37"
 MOBILE_USER_AGENT ="Mozilla/5.0 (iPhone; CPU iPhone OS 14_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1"
@@ -53,7 +53,7 @@ profile = webdriver.FirefoxProfile()
 profile.set_preference("general.useragent.override", USER_AGENT)
 
 options = Options()
-options.headless = True
+options.headless = False
 
 
 
@@ -63,6 +63,7 @@ mob_profile = webdriver.FirefoxProfile()
 mob_profile.set_preference("general.useragent.override", MOBILE_USER_AGENT)
 mob_driver =  webdriver.Firefox(executable_path=EXEC_PATH, firefox_profile=mob_profile, options=options)
 linkFix = ''
+
 
 def checkIfElementExists(id, whichdriver):
     try:
@@ -134,9 +135,13 @@ def login(num, MSAccount, whichDriver, mob):
 
 def logout(whichDriver):
     try:
+        script = 'document.getElementById("mectrl_popup").className = "mectrl_body expand"'
         whichDriver.get(DASHBOARD)
         time.sleep(WEB_DELAY)
-        whichDriver.find_element_by_id("mectrl_main_trigger").click()
+        if checkIfElementExists("raf-signin-link-id", whichDriver)== True:
+            whichDriver.find_element_by_id("raf-signin-link-id").click()
+            time.sleep(WEB_DELAY)
+        whichDriver.execute_script(script)
         time.sleep(1)
         whichDriver.find_element_by_id("mectrl_body_signOut").click()
         time.sleep(WEB_DELAY)
@@ -186,7 +191,8 @@ def main():
         login(num, msAccount, driver, False)
         time.sleep(WEB_DELAY)
         #accept button thing manage cookies
-        for _ in range(34):
+        #34
+        for _ in range(1):
             search(driver)
         logout(driver)
     
@@ -198,7 +204,8 @@ def MOB_main():
         login(num, msAccount,mob_driver, True)
         time.sleep(WEB_DELAY)
         #accept button thing manage cookies
-        for _ in range(20):
+        #20
+        for _ in range(1):
             search(mob_driver)
         logout(mob_driver)
     mob_driver.quit()
