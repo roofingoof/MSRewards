@@ -191,8 +191,7 @@ def main():
         login(num, msAccount, driver, False)
         time.sleep(WEB_DELAY)
         #accept button thing manage cookies
-        #34
-        for _ in range(1):
+        for _ in range(34):
             search(driver)
         logout(driver)
     
@@ -204,8 +203,7 @@ def MOB_main():
         login(num, msAccount,mob_driver, True)
         time.sleep(WEB_DELAY)
         #accept button thing manage cookies
-        #20
-        for _ in range(1):
+        for _ in range(20):
             search(mob_driver)
         logout(mob_driver)
     mob_driver.quit()
